@@ -2,7 +2,7 @@ import TodoListItem from "./TodoListItem";
 
 export default function TodoList({ list }) {
   return list.length == 0 ? (
-    <p className="badge bg-warning">
+    <p className="badge bg-info">
     Você ainda não tem tarefas</p>
   ) : (
     <ul className="list-group">
