@@ -1,15 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
 import TodoList from "../src/TodoList";
+import TodoService from "../src/services/TodoService";
 
 export default function Home() {
   const [todoValue, setTodoValue] = useState("");
   const [todoList, setTodoList] = useState([]);
 
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const todoService = new TodoService(window);
+      const todoListItem = todoService.getList();
+
+      try {
+        if (todoList.length == 0) {
+          const jsonList = JSON.parse(todoListItem);
+          setTodoList(jsonList);
+        }
+      } catch (e) {
+        console.log(`Erro no parse do storage: ${e}`);
+        todoService.save([]);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (todoList.length > 0) {
+      const todoService = new TodoService(window);
+      todoService.save(todoList);
+    }
+  }, [todoList]);
+
   const handleButtonClick = () => {
-    setTodoList([...todoList, todoValue]);
-    setTodoValue('');
+    if (todoValue !== "") {
+      const todo = {
+        id: todoList.length + 1,
+        title: todoValue,
+        checked: false,
+      };
+
+      todoList.push(todo);
+
+      setTodoList([...todoList]);
+      setTodoValue("");
+    }
   };
 
   return (
