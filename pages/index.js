@@ -9,26 +9,20 @@ export default function Home() {
   const [todoList, setTodoList] = useState([]);
 
   useEffect(() => {
-    if (typeof window !== undefined) {
-      const todoService = new TodoService(window);
+      const todoService = new TodoService();
       const todoListItem = todoService.getList();
-
-      try {
-        if (todoList.length == 0) {
-          const jsonList = JSON.parse(todoListItem);
-          setTodoList(jsonList);
+      todoListItem.then((data) =>{
+        console.log(data);
+        if (data.length > 0) {
+          setTodoList(data);
         }
-      } catch (e) {
-        console.log(`Erro no parse do storage: ${e}`);
-        todoService.save([]);
-      }
-    }
-  }, []);
+      })
+  },[]);
 
   useEffect(() => {
-    if (todoList.length > 0) {
-      const todoService = new TodoService(window);
-      todoService.save(todoList);
+    if (todoList !== null && todoList.length > 0) {
+      // const todoService = new TodoService(window);
+      // todoService.save(todoList);
     }
   }, [todoList]);
 

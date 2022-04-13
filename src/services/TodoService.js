@@ -1,12 +1,18 @@
+import axios from "axios";
+
 export default class TodoService {
   constructor(window) {
-    this.STORAGE_ITEM = "todoListItem";
-    this._window = window;
-    this._storage = window.localStorage;
   }
 
   getList() {
-    return this._storage.getItem(this.STORAGE_ITEM);
+    return axios
+      .get("https://0a11-160-238-27-77.sa.ngrok.io/todos")
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   save(list) {

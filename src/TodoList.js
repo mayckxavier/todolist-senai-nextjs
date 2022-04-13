@@ -3,7 +3,8 @@ import styles from './TodoList.module.css'
 import TodoListItem from "./TodoListItem";
 
 export default function TodoList({ list }) {
-  return list.length == 0 ? (
+ if(list !== null){
+  return (list.length == 0) ? (
     <p className={`badge ${styles.corAzul}`}>Você ainda não tem tarefas</p>
   ) : (
     <ul className="list-group">
@@ -12,4 +13,5 @@ export default function TodoList({ list }) {
       })}
     </ul>
   );
+ }  
 }
