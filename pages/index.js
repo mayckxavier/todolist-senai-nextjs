@@ -8,35 +8,33 @@ export default function Home() {
   const [todoValue, setTodoValue] = useState("");
   const [todoList, setTodoList] = useState([]);
 
-  useEffect(() => {
-      const todoService = new TodoService();
-      const todoListItem = todoService.getList();
-      todoListItem.then((data) =>{
-        console.log(data);
-        if (data.length > 0) {
-          setTodoList(data);
-        }
-      })
-  },[]);
+  const todoService = new TodoService();
 
   useEffect(() => {
-    if (todoList !== null && todoList.length > 0) {
-      // const todoService = new TodoService(window);
-      // todoService.save(todoList);
-    }
-  }, [todoList]);
+    loadList();
+  },[]);
+
+  const loadList = () => {
+    const todoListItem = todoService.getList();
+    todoListItem.then((data) =>{
+      console.log(data);
+      if (data.length > 0) {
+        setTodoList(data);
+      }
+    })
+  };
 
   const handleButtonClick = () => {
     if (todoValue !== "") {
       const todo = {
-        id: todoList.length + 1,
         title: todoValue,
         checked: false,
       };
 
-      todoList.push(todo);
-
-      setTodoList([...todoList]);
+      const savedTodo = todoService.save(todo);
+      savedTodo.then(() => {
+        loadList();
+      })
       setTodoValue("");
     }
   };
