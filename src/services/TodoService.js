@@ -1,12 +1,13 @@
 import axios from "axios";
 
 export default class TodoService {
-  constructor(window) {
-  }
+  constructor() {}
+
+  BASE_URL = "https://senai-todo-list-api.herokuapp.com";
 
   getList() {
     return axios
-      .get("https://0a11-160-238-27-77.sa.ngrok.io/todos")
+      .get(`${this.BASE_URL}/todos`)
       .then((response) => {
         return response.data;
       })
@@ -15,20 +16,23 @@ export default class TodoService {
       });
   }
 
-  save(list) {
-    return this._storage.setItem(this.STORAGE_ITEM, JSON.stringify(list));
+  save(todo) {
+    return axios
+      .post(`${this.BASE_URL}/todos`, todo)
+      .then((response) => {
+        console.log(response);
+        return response.data;
+      })
+      .catch((error) => console.log(error));
   }
 
   updateTodo(todo) {
-    const todoList = JSON.parse(this._storage.getItem(this.STORAGE_ITEM));
-
-    const updatedTodoList = todoList.map((item) => {
-      if (item.id == todo.id) {
-        return todo;
-      }
-      return item;
-    });
-
-    this.save(updatedTodoList);
+    return axios
+      .patch(`${this.BASE_URL}/todos/${todo.id}`, todo)
+      .then((response) => {
+        return response.status;
+      }).catch((error) => {
+        return error;
+      });
   }
 }
