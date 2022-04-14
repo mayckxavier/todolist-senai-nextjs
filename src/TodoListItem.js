@@ -1,20 +1,22 @@
-import {useState, useEffect} from  'react';
-import updateTodo from './services/TodoService';
+import {useState} from  'react';
+import TodoService from './services/TodoService';
 
 export default function TodoListItem({ todo, index }) {
   const [checked, setChecked] = useState(todo.checked);
+
+  const todoService = new TodoService();
 
   const handleClick = (e) => {
     const check = e.target.checked;
 
     setChecked(check);
-    const newTodo = todo;
 
-    updateTodo({
-      id: newTodo.id,
-      title: newTodo.title,
+    const newTodo = {
+      ...todo,
       checked: check
-    });
+    }
+
+    todoService.updateTodo(newTodo);
   };
 
   return (
